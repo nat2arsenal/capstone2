@@ -1,7 +1,6 @@
 {
   "name": "capstone2",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +14,11 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.8.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:batch218-arsenal/capstone2/capstone2.git"
+  },
+  "description": ""
 }
