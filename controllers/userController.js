@@ -4,7 +4,7 @@ const Order = require("../models/order.js");
 const auth = require("../auth.js"); 
 const bcrypt = require("bcrypt");
 
-
+// User Registration - OK
 module.exports.registerUser = (reqBody) => {
 	return User.findOne({email : reqBody.email}).then(result => {
 
@@ -13,21 +13,25 @@ module.exports.registerUser = (reqBody) => {
 			return {message: "ERROR: There is already a registered account under the same email, kindly register again using another email. Thank you."}; 
 		} else { // If email isn't registered, proceed with user registration
 			let newUser = new User({
+				firstName: reqBody.firstName,
+				lastName: reqBody.lastName,
 				email : reqBody.email,
-				password : bcrypt.hashSync(reqBody.password, 10)
+				password : bcrypt.hashSync(reqBody.password, 10),
+				mobileNumber: reqBody.mobileNumber
 			});
 		
 			return newUser.save().then((user, error) => {
 				if (error){
-					return false; 
+					return {message: "User registration failed."}; 
 				} else {
-					return true; 
+					return {message: "Congratulations! You are now registered."}; 
 				}
 			})
 		}
-	})
-}
+	});
+};
 
+// User Login - OK
 module.exports.loginUser = (reqBody) => {
 	return User.findOne({email: reqBody.email}).then(result => {
 			if (result == null){
@@ -45,36 +49,62 @@ module.exports.loginUser = (reqBody) => {
 					// return "Incorrect password"
 				}
 			}
-	})
-}
+	});
+};
 
-module.exports.setAsAdmin = (userId) => {
+// Setting an account to admin (admin only) - OK
+module.exports.setAsAdmin = (userId, req) => {
+
+	let loggedInUser = auth.decode(req.headers.authorization);
+
+
 	return User.findById(userId).then(user => {
-		if(user === null){
-			return false;
-		}else{
+		if(user === null){ // Checking if user exists
+
+			return {message: "ERROR: User does not exist."};
+
+		} else if (loggedInUser.email === user.email){ // Checking if the user (with admin permissions) is setting himself as admin
+
+			return {message: "ERROR: You are already an admin."};
+
+		} else if (user.isAdmin === true){ // Checking if the user (with admin permissions) is setting another user (who already has admin permissions) as an admin
+
+			return {message: "ERROR: The account already has admin permissions."};
+
+		} else{
 			user.isAdmin = true;
 			return user.save().then((updatedUser, error) => {
 				if(error){
-					return false;
+					return {message: "ERROR: An unexpected error has occurred."};
 				} else {
-					return {message : "Congrats! You now have an admin account."};
+					return {message : "Congrats! You now have admin permissions."};
 				}
 			})
 		}
-	})
-}
+	});
+};
 
-module.exports.getProfile = (userId) => {
+// Get all users' details (admin only) - OK
+module.exports.getAllUserProfiles = () => {
+	return User.find().then(result => {
+		return result;
+	});
+};
+
+// Get a user's details - OK
+module.exports.getUserProfile = (userId) => {
 
 	return User.findById(userId).then(result => {
 
 		if (result == null){
-			return false;
+			return {message: "User does not exist."};
 		} else {
-
-			result.password = "******"
+			result.password = "******";
 			return result;
 		}
-	})
-}
+	});
+};
+
+// Add to cart products - under construction
+
+

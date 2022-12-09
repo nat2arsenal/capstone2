@@ -28,7 +28,7 @@ module.exports.verify = (request, response, next) => {
 	let token = request.headers.authorization
 
 	if(typeof token !== "undefined"){
-		console.log(token);
+		// console.log(token);
 
 		// remove unnecessary characters ( "Bearer ") from the token
 		token = token.slice(7, token.length);
