@@ -41,12 +41,16 @@ module.exports.getAllActiveProducts = () => {
 // Get a specific product's information - OK
 module.exports.getProduct = (productId) => {
 	return Product.findById(productId).then(result => {
-		return result;
+		if (!result){
+			return {ERROR: "Product is not existing."}
+		} else {
+			return result;
+		}
 	});
 };
 
-// UPDATING A PRODUCT'S NAME AND DESCRIPTION
-module.exports.updateProductNameAndDescription = (productId, reqBody) => {
+// Updating a product's information (name, description, price) - OK
+module.exports.updateProduct = (productId, reqBody) => {
 	let updatedProduct = {
 		productName : reqBody.productName,
 		description : reqBody.description,
@@ -62,20 +66,35 @@ module.exports.updateProductNameAndDescription = (productId, reqBody) => {
 	});
 };
 
-// // UPDATING A PRODUCT'S PRICE - OK
-// module.exports.updateProductPrice = (productId, reqBody) => {
-// 	let updatedProduct = {
-// 		price : reqBody.price
-// 	};
+// Adding more stocks a product's stocks - OK
+module.exports.addProductStocks = async(productId, newStocks) => {
 
-// 	return Product.findByIdAndUpdate(productId, updatedProduct).then((product, error) => {
-// 		if (error) {
-// 			return {message: "ERROR: Could not update product's price."};
-// 		} else {
-// 			return product;
-// 		}
-// 	});
-// };
+	const currentProduct = await Product.findById(productId).then((product, error) => {
+		if (error) {
+			return {message: "ERROR: Could not find product."};
+		} else {
+			return product;
+		}
+	});
+
+	currentProduct.stocks = currentProduct.stocks + newStocks;
+	return currentProduct.save();
+};
+
+// Subtracting stocks to a product's stocks 
+module.exports.subtractProductStocks = async(productId, removedStocks) => {
+
+	const currentProduct = await Product.findById(productId).then((product, error) => {
+		if (error) {
+			return {message: "ERROR: Could not find product."};
+		} else {
+			return product;
+		}
+	});
+
+	currentProduct.stocks = currentProduct.stocks - removedStocks;
+	return currentProduct.save();
+};
 
 // ARCHIVING a product - OK
 module.exports.archiveProduct = (productId) => {
@@ -108,3 +127,4 @@ module.exports.activateProduct = (productId) => {
 };
 
 // UPDATE PRODUCT STOCKS (AUTOMATIC WITH REGARDS TO ORDERS)
+

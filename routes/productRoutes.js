@@ -4,54 +4,69 @@ const auth = require("../auth.js");
 const productController = require("../controllers/productController.js");
 const Product = require("../models/product.js");
 
-// Create product (Admin Only)
+// Create product (Admin Only) - OK
 router.post("/add", auth.verify, (req, res) => {
 	if(auth.decode(req.headers.authorization).isAdmin === false) {
 		res.send({message: "Failed to add new product, please seek admin assistance."});
 	} else {
-		// Product.findOne({productName: req.body.productName, description: req.body.description}).then((result, req) => {
-		// 	if (result !== null){
-		// 		res.send({message: "Product is already existing, please update the product's stock instead."});
-		// 	} else {
-		// 		productController.addNewProduct(req.body).then(resultFromController => res.send(resultFromController))
-		// 	}
-		// })
-		productController.addNewProduct(req.body).then(resultFromController => res.send(resultFromController))
+		const reqBody = req.body;
+		Product.findOne({$and: [{productName: reqBody.productName}, {description: reqBody.description}]}).then((result) => {
+			if (result !== null){ // Check if there's already a product that has the same name and description
+				/* 
+				result.stocks = result.stocks + reqBody.stocks;
+				result.save();
+				res.send(result);
+				*/
+				res.send({message: "Product is already existing, please update the product's stock instead."});
+			} else {
+				productController.addNewProduct(reqBody).then(resultFromController => res.send(resultFromController))
+			}
+		})
+		// productController.addNewProduct(req.body).then(resultFromController => res.send(resultFromController))
 	}
 });
 
-// Get all products
+// Get all products - OK
 router.get("/all", (req, res) => {
 	productController.getAllProducts().then(resultFromController => res.send(resultFromController));
 });
 
-// Get all active products
+// Get all active products - OK
 router.get("/active", (req, res) => {
 	productController.getAllActiveProducts().then(resultFromController => res.send(resultFromController));
 });
 
-// Get a specific product
+// Get a specific product - OK
 router.get("/:productId", (req, res) => {
 	productController.getProduct(req.params.productId).then(resultFromController => res.send(resultFromController))
 });
 
-// Update a product's information (Admin Only)
+// Update a product's information (Admin Only) - OK
 router.patch("/:productId/info", auth.verify, (req, res) => {
 	if(auth.decode(req.headers.authorization).isAdmin === false) {
 		res.send({message: "Failed to update the product's information, please seek admin assistance."});
 	} else {
-		productController.updateProductNameAndDescription(req.params.productId, req.body).then(resultFromController => res.send(resultFromController))
+		productController.updateProduct(req.params.productId, req.body).then(resultFromController => res.send(resultFromController))
 	}
 });
 
-// // Update a product's price (Admin Only)
-// router.patch("/:productId/price", auth.verify, (req, res) => {
-// 	if(auth.decode(req.headers.authorization).isAdmin === false) {
-// 		res.send({message: "Failed to update the product's price, please seek admin assistance."});
-// 	} else {
-// 		productController.updateProductPrice(req.params.productId, req.body).then(resultFromController => res.send(resultFromController))
-// 	}
-// });
+// Add more stocks a product's stocks (Admin Only) - OK
+router.patch("/:productId/info/stocks", auth.verify, (req, res) => {
+	if(auth.decode(req.headers.authorization).isAdmin === false) {
+		res.send({message: "Failed to update the product's information, please seek admin assistance."});
+	} else {
+		productController.addProductStocks(req.params.productId, req.body.stocks).then(resultFromController => res.send(resultFromController))
+	}
+});
+
+// Subtracting stocks to a product's stocks (Admin Only) - OK
+router.patch("/:productId/info/stocks/subtract", auth.verify, (req, res) => {
+	if(auth.decode(req.headers.authorization).isAdmin === false) {
+		res.send({message: "Failed to update the product's information, please seek admin assistance."});
+	} else {
+		productController.subtractProductStocks(req.params.productId, req.body.stocks).then(resultFromController => res.send(resultFromController))
+	}
+});
 
 // Archive a product (Admin Only)
 router.patch("/:productId/archive", auth.verify, (req, res) => { 
