@@ -132,17 +132,21 @@ module.exports.addToCart = (userId, product) => {
 };
 */
 
-module.exports.checkout = (userId, cart) => {
-	console.log(cart.products[0].productName);
-
+module.exports.checkout = (userId, reqBody) => {
+	console.log(reqBody.products[0].productName);
+	/*
+	reqBody.orderProducts.forEach(orderProduct => {
+		Product.findById
+	})
+	*/
 	return User.findById(userId).then(user => {
 		if(user === null){
 			return false;
 		} else {
 			user.orders.push(
 				{
-					products: cart.products,
-					totalAmount: cart.totalAmount
+					products: reqBody.products,
+					totalAmount: reqBody.totalAmount
 				}
 			);
 			console.log(user.orders);
@@ -153,7 +157,7 @@ module.exports.checkout = (userId, cart) => {
 					const currentOrder = updatedUser.orders[updatedUser.orders.length-1];
 					
 					currentOrder.products.forEach(product => {
-						Product.findById(product.productId).then(foundProduct => {
+						Product.findById(product.productName).then(foundProduct => {
 							foundProduct.orders.push({orderId: currentOrder._id})
 
 							foundProduct.save()
@@ -167,29 +171,17 @@ module.exports.checkout = (userId, cart) => {
 	})
 }
 
+
 module.exports.getMyOrders = (userId) => {
-	return User.findById(userId).then(user => {
-		if(user === null){
+	return Order.find({userId: userId}).then(order => {
+		if(order === null){
 			return false;
 		} else {
-			return user.orders;
+			return order;
 		}
 	})
 }
 
-module.exports.getAllOrders = () => {
-	return User.find({isAdmin: false}).then(users => {
-		let allOrders = [];
-		users.forEach(user => {
-			allOrders.push({
-				email: user.email,
-				userId: user._id,
-				orders: user.orders
-			});
-		})
-		return allOrders;
-	})
-}
 
 
 

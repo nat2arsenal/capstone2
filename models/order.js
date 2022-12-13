@@ -2,11 +2,30 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
 
-	orderProducts: [{
-	    type: mongoose.Schema.Types.ObjectId,
-	    ref: "OrderProduct",
-	    required:true
-	}],
+	userId: {
+	    type: String,
+	    required: true
+	},
+	userFirstName: {
+		type: String,
+		required: true
+	},
+	userLastName: {
+		type: String,
+		required: true
+	},
+	orderProducts: [
+		{
+		    productId: {
+		            type: String,
+		            required: true
+		    },
+		    quantity: {
+		        type: Number,
+		        required: true
+		    }
+		}
+	],
 	shippingAddress: {
 	    type: String,
 	    required: [true, "Shipping address is required."]
@@ -35,10 +54,6 @@ const orderSchema = new mongoose.Schema({
 	totalAmount: {
 	    type: Number,
 	},
-	user: {
-	    type: mongoose.Schema.Types.ObjectId,
-	    ref: "User",
-	},
 	transactionDate: {
 		type: Date,
 		default: new Date()
@@ -52,22 +67,29 @@ module.exports = mongoose.model("Order", orderSchema);
 Order Example:
 
 {
-    "orderProducts" : [
+	"userId": "req.params.userId",
+    "orderProducts" : [  
         {
-            "quantity": 3,
-            "product" : "5fcfc406ae79b0a6a90d2585"
+        	"productId" : "", reqBody.orderProducts.productId
+            "quantity": 3  reqBody.orderProducts.quantity
+
         },
         {
-            "quantity": 2,
-            "product" : "5fd293c7d3abe7295b1403c4"
+        	"productId" : "", reqBody.orderProducts.productId
+            "quantity": 3  reqBody.orderProducts.quantity
+
         }
     ],
-    "shippingAddress" : "Flowers Street , 45",
-    "city": "Prague",
-    "zip": "00000",
-    "country": "Czech Republic",
-    "mobileNumber": "+420702241333",
-    "user": "5fd51bc7e39ba856244a3b44"
+    "shippingAddress" : "Flowers Street , 45",     reqBody.shippingAddress
+    "city": "Prague",                  reqBody.city
+    "zip": "00000",					   reqBody.zip
+    "country": "Czech Republic",	   reqBody.country
+    "mobileNumber": "+420702241333",   reqBody.mobileNumber
+    "totalAmount" : order.orderProducts.subtotal.forEach (subtotal => {
+		
+    })
+    
 }
 
  */
+

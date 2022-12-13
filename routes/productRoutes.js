@@ -13,16 +13,17 @@ router.post("/add", auth.verify, (req, res) => {
 		Product.findOne({$and: [{productName: reqBody.productName}, {description: reqBody.description}]}).then((result) => {
 			if (result !== null){ // Check if there's already a product that has the same name and description
 				/* 
-				result.stocks = result.stocks + reqBody.stocks;
-				result.save();
-				res.send(result);
+					// Automatic addition to stocks if productName and description is already existing, working but not used
+
+					result.stocks = result.stocks + reqBody.stocks;
+					result.save();
+					res.send(result);
 				*/
 				res.send({message: "Product is already existing, please update the product's stock instead."});
 			} else {
 				productController.addNewProduct(reqBody).then(resultFromController => res.send(resultFromController))
 			}
 		})
-		// productController.addNewProduct(req.body).then(resultFromController => res.send(resultFromController))
 	}
 });
 
@@ -38,6 +39,7 @@ router.get("/active", (req, res) => {
 
 // Get a specific product - OK
 router.get("/:productId", (req, res) => {
+	console.log(req.params.productId);
 	productController.getProduct(req.params.productId).then(resultFromController => res.send(resultFromController))
 });
 
@@ -85,7 +87,10 @@ router.patch("/:productId/activate", auth.verify, (req, res) => { //need for mid
 		productController.activateProduct(req.params.productId).then(resultFromController => res.send(resultFromController))
 	}
 });
+/*
+	// UPDATE PRODUCT STOCKS (AUTOMATIC WITH REGARDS TO ORDERS)
 
-// UPDATE PRODUCT STOCKS (AUTOMATIC WITH REGARDS TO ORDERS)
+	TO BE CONTINUED
 
+*/
 module.exports = router;

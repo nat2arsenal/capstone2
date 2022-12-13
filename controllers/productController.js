@@ -15,13 +15,13 @@ module.exports.addNewProduct = (reqBody) => {
 
 	// Product.find({productName: newProduct.productName});
 
-		return newProduct.save().then((product, error) => {
-			if (error) {
-				return {message: "ERROR: Failed to add new product."};
-			} else {
-				return product;
-			}
-		})
+	return newProduct.save().then((product, error) => {
+		if (error) {
+			return {message: "ERROR: Failed to add new product."};
+		} else {
+			return product;
+		}
+	})
 };
 
 // Get all products' information - OK
@@ -126,5 +126,17 @@ module.exports.activateProduct = (productId) => {
 	});
 };
 
-// UPDATE PRODUCT STOCKS (AUTOMATIC WITH REGARDS TO ORDERS)
+// VALIDATE IF A PRODUCT EXISTS - not used
+module.exports.validateProduct = (productId) => {
+	return Product.findById(productId).then(result => {
+		if (!result) {
+			return false;
+		} else {
+			return true;
+		}
+	})
+};
+
+
+// UPDATE PRODUCT STOCKS (AUTOMATIC WITH REGARDS TO ORDERS) - to be made
 

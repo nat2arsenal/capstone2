@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema({
 	createdOn: {
 		type: Date,
 		default: new Date()
-	}
+	},
 });
 
 module.exports = mongoose.model("Product", productSchema);
