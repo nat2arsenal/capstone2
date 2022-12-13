@@ -105,82 +105,16 @@ module.exports.getUserProfile = (userId) => {
 	});
 };
 
-// Add to cart products - under improvement
-/*
-module.exports.addToCart = (userId, product) => {
-
-	return User.findById(userId).then(user => {
-		if(user === null){
-			return false;
-		} else {
-			user.myCart.products.push(
-				{
-					productName: product.productName,
-					quantity: product.quantity
-				}
-			);
-
-			return user.save().then((updatedUserCart, error) => {
-				if(error){
-					return false;
-				} else {
-					return updatedUserCart.myCart.products;
-				}
-			})
-		}
-	})
-};
-*/
-
-module.exports.checkout = (userId, reqBody) => {
-	console.log(reqBody.products[0].productName);
-	/*
-	reqBody.orderProducts.forEach(orderProduct => {
-		Product.findById
-	})
-	*/
-	return User.findById(userId).then(user => {
-		if(user === null){
-			return false;
-		} else {
-			user.orders.push(
-				{
-					products: reqBody.products,
-					totalAmount: reqBody.totalAmount
-				}
-			);
-			console.log(user.orders);
-			return user.save().then((updatedUser, error) => {
-				if(error){
-					return false;
-				} else {
-					const currentOrder = updatedUser.orders[updatedUser.orders.length-1];
-					
-					currentOrder.products.forEach(product => {
-						Product.findById(product.productName).then(foundProduct => {
-							foundProduct.orders.push({orderId: currentOrder._id})
-
-							foundProduct.save()
-						})
-					});
-
-					return true;
-				}
-			})
-		}
-	})
-}
-
-
 module.exports.getMyOrders = (userId) => {
 	return Order.find({userId: userId}).then(order => {
 		if(order === null){
 			return false;
 		} else {
+
 			return order;
 		}
 	})
-}
+};
 
 
 
