@@ -25,6 +25,7 @@ router.get("/pending", auth.verify, (req, res) => {
 	}
 });
 
+// Approve order (ADMIN ONLY)
 router.patch("/approve/:orderId", auth.verify, (req, res) => {
 	const userData = auth.decode(req.headers.authorization);
 
@@ -32,6 +33,17 @@ router.patch("/approve/:orderId", auth.verify, (req, res) => {
 		res.send({message: "Only Admins can access this feature"});
 	} else {
 		orderController.approveOrders(req.params.orderId).then(resultFromController => res.send(resultFromController));
+	}
+});
+
+// Get all APPROVED orders (Admin only)
+router.get("/approved", auth.verify, (req, res) => {
+	const userData = auth.decode(req.headers.authorization);
+
+	if(userData.isAdmin === false) {
+		res.send({message: "Only Admins can access this feature"});
+	} else {
+		orderController.getAllApprovedOrders().then(resultFromController => res.send(resultFromController));
 	}
 });
 

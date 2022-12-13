@@ -114,7 +114,7 @@ module.exports.getMyOrders = (userId) => {
 			return order;
 		}
 	})
-};
+};	
 
 
 

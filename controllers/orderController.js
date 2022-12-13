@@ -96,3 +96,10 @@ module.exports.approveOrders = (orderId) => {
 		}
 	});
 };
+
+// GET all approved orders
+module.exports.getAllApprovedOrders = () => {
+	return Order.find({status : "Approved"}).then(result => {
+			return result;
+		});
+};
