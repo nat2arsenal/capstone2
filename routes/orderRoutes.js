@@ -36,6 +36,17 @@ router.patch("/approve/:orderId", auth.verify, (req, res) => {
 	}
 });
 
+// dispprove order (ADMIN ONLY)
+router.patch("/disapprove/:orderId", auth.verify, (req, res) => {
+	const userData = auth.decode(req.headers.authorization);
+
+	if(userData.isAdmin === false) {
+		res.send({message: "Only Admins can access this feature"});
+	} else {
+		orderController.disapproveOrders(req.params.orderId).then(resultFromController => res.send(resultFromController));
+	}
+});
+
 // Get all APPROVED orders (Admin only)
 router.get("/approved", auth.verify, (req, res) => {
 	const userData = auth.decode(req.headers.authorization);
@@ -47,5 +58,15 @@ router.get("/approved", auth.verify, (req, res) => {
 	}
 });
 
+// Get all DISAPPROVED orders (Admin only)
+router.get("/disapproved", auth.verify, (req, res) => {
+	const userData = auth.decode(req.headers.authorization);
+
+	if(userData.isAdmin === false) {
+		res.send({message: "Only Admins can access this feature"});
+	} else {
+		orderController.getAllDisapprovedOrders().then(resultFromController => res.send(resultFromController));
+	}
+});
 
 module.exports = router;

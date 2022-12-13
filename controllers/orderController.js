@@ -97,9 +97,32 @@ module.exports.approveOrders = (orderId) => {
 	});
 };
 
+module.exports.disapproveOrders = (orderId) => {
+	let updateStatusField = {
+		status : "Disapproved"
+	};
+
+
+	return Order.findByIdAndUpdate(orderId, updateStatusField).then((order, error) => {
+		if (error) {
+			return {message: "Order not approved."};
+		} else {
+			return order;
+		}
+	});
+};
+
+
 // GET all approved orders
 module.exports.getAllApprovedOrders = () => {
 	return Order.find({status : "Approved"}).then(result => {
+			return result;
+		});
+};
+
+// GET all disapproved orders
+module.exports.getAllDisapprovedOrders = () => {
+	return Order.find({status : "Disapproved"}).then(result => {
 			return result;
 		});
 };
