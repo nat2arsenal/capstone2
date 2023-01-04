@@ -6,38 +6,46 @@ const productController = require("../controllers/productController.js");
 
 const auth = require("../auth.js"); 
 const bcrypt = require("bcrypt");
+const ObjectId = require('mongodb').ObjectId;
+
+
+// Function to create new order-product - OK
+const createOrderProduct = async(orderProduct) => {
+	const productPrice = await Product.findById(orderProduct.productId);
+	const subtotal = productPrice.price * orderProduct.quantity;
+	// console.log(subtotal); 
+
+    let newOrderProduct = new OrderProduct({
+	    productId: orderProduct.productId,
+	    quantity: orderProduct.quantity,
+	    price: productPrice.price,
+	    subtotal: subtotal
+	});
+
+    newOrderProduct = await newOrderProduct.save();
+
+    return newOrderProduct;
+};
 
 // ORDER Checkout
 module.exports.checkout = async(userId, reqBody) => {
+	
 	const orderProductsIds = Promise.all(reqBody.orderProducts.map(async (orderProduct) =>{
-
-		// ADD CODE TO VALIDATE ORDER-PRODUCT (IF PRODUCT IS EXISTING, IF ACTIVE, IF THERE'S ENOUGH STOCKS) - not achieved
 		// ADD CODE TO CONNECT WHICH ORDER THE ORDER-PRODUCT BELONGS TO (BY USING ORDER ID) - not achieved
-		const productPrice = await Product.findById(orderProduct.productId).populate('price');
-		const subtotal = productPrice.price * orderProduct.quantity;
-		// console.log(subtotal); 
+		productController.subtractProductStocks(orderProduct.productId, orderProduct.quantity); // Automatic subtraction to product's stocks based on the quantity on the order
+		let newOrderProduct = await createOrderProduct(orderProduct);
+		return newOrderProduct._id;
+	}));
 
-	    let newOrderProduct = new OrderProduct({
-	        productId: orderProduct.productId,
-	        quantity: orderProduct.quantity,
-	        price: productPrice.price,
-	        subtotal: subtotal
-	    })
-
-	    newOrderProduct = await newOrderProduct.save();
-
-	    return newOrderProduct._id;
-	}))
 	const orderProductsIdsResolved =  await orderProductsIds;
 
-	const totalPrices = await Promise.all(orderProductsIdsResolved.map(async (orderProductId)=>{
+	const subtotals = await Promise.all(orderProductsIdsResolved.map(async (orderProductId)=>{
 	    const orderProduct = await OrderProduct.findById(orderProductId).populate('productId', 'price');
 	    const totalPrice = orderProduct.productId.price * orderProduct.quantity;
-	    return totalPrice
-	}))
+	    return totalPrice;
+	}));
 
-	const totalPrice = totalPrices.reduce((a,b) => a + b , 0);
-	//console.log(totalPrice);
+	const totalPrice = subtotals.reduce((a,b) => a + b , 0);
 
 	const user = await User.findById(userId);
 
@@ -52,10 +60,8 @@ module.exports.checkout = async(userId, reqBody) => {
 		country: reqBody.country,
 		mobileNumber: reqBody.mobileNumber,
 		totalAmount: totalPrice
-
 	});
-
-	//console.log(newOrder._id);
+	
 
 	return newOrder.save().then((order, error) => {
 		if (error) {
@@ -63,7 +69,8 @@ module.exports.checkout = async(userId, reqBody) => {
 		} else {
 			return order;
 		}
-	})
+	});
+
 };
 
 // GET all orders
@@ -125,4 +132,14 @@ module.exports.getAllDisapprovedOrders = () => {
 	return Order.find({status : "Disapproved"}).then(result => {
 			return result;
 		});
+};
+
+// DELETE all orders
+module.exports.deleteOrders = () => {
+	return Order.deleteMany().then(result => { return result; });
+};
+
+// DELETE all order-products
+module.exports.deleteOrderProducts = () => {
+	return OrderProduct.deleteMany().then(result => { return result; });
 };

@@ -69,4 +69,25 @@ router.get("/disapproved", auth.verify, (req, res) => {
 	}
 });
 
+
+router.delete("/deleteOrders", auth.verify, (req, res) => {
+	const userData = auth.decode(req.headers.authorization);
+
+	if(userData.isAdmin === false) {
+		res.send({message: "Only Admins can access this feature"});
+	} else {
+		orderController.deleteOrders().then(resultFromController => res.send(resultFromController));
+	}
+});
+
+router.delete("/deleteOrderProducts", auth.verify, (req, res) => {
+	const userData = auth.decode(req.headers.authorization);
+
+	if(userData.isAdmin === false) {
+		res.send({message: "Only Admins can access this feature"});
+	} else {
+		orderController.deleteOrderProducts().then(resultFromController => res.send(resultFromController));
+	}
+});
+
 module.exports = router;

@@ -4,6 +4,7 @@ const Order = require("../models/order.js");
 const auth = require("../auth.js"); 
 const bcrypt = require("bcrypt");
 
+
 // Add new product - ADD FEATURE TO DISALLOW ADDING WHEN PRODUCT NAME AND DESCRIPTION IS ALREADY EXISTING
 module.exports.addNewProduct = (reqBody) => {
 	let newProduct = new Product({
@@ -93,6 +94,10 @@ module.exports.subtractProductStocks = async(productId, removedStocks) => {
 	});
 
 	currentProduct.stocks = currentProduct.stocks - removedStocks;
+	if (currentProduct.stocks === 0){
+		autoArchiveProduct(productId);
+	} 
+
 	return currentProduct.save();
 };
 
@@ -138,5 +143,17 @@ module.exports.validateProduct = (productId) => {
 };
 
 
-// UPDATE PRODUCT STOCKS (AUTOMATIC WITH REGARDS TO ORDERS) - to be made
+const autoArchiveProduct = async (productId) => {
+	let updateActiveField = {
+		isActive : false
+	};
+
+	return Product.findByIdAndUpdate(productId, updateActiveField).then((product, error) => {
+		if (error) {
+			return {message: "ERROR: Could not archive product."};
+		} else {
+			return product;
+		}
+	});
+};
 

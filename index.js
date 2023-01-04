@@ -41,3 +41,13 @@ app.listen(process.env.PORT || 5000, () => {console.log(`API is now online on po
 	npm install jsonwebtoken
 		- produces access token 
 */
+
+/*
+	CAPSTONE2 IMPROVEMENTS
+
+	// Added order validation code (examines if the quantity of an order-product > 0 , examines if the product is existing, examines if the product is active, examines if the product has enough stocks)
+
+	// Added autoupdate of stocks upon successful placement of order
+	// Added autoarchiving of product when the stock reaches zero
+
+*/
