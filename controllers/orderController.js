@@ -40,8 +40,8 @@ module.exports.checkout = async(userId, reqBody) => {
 	const orderProductsIdsResolved =  await orderProductsIds;
 
 	const subtotals = await Promise.all(orderProductsIdsResolved.map(async (orderProductId)=>{
-	    const orderProduct = await OrderProduct.findById(orderProductId).populate('productId', 'price');
-	    const totalPrice = orderProduct.productId.price * orderProduct.quantity;
+	    const orderProduct = await OrderProduct.findById(orderProductId);
+	    const totalPrice = orderProduct.price * orderProduct.quantity;
 	    return totalPrice;
 	}));
 

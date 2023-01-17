@@ -6,6 +6,12 @@ const orderController = require("../controllers/orderController.js");
 const productController = require("../controllers/productController.js");
 const Product = require("../models/product.js");
 
+router.post("/checkEmail", (request, response) => {
+	userController.checkEmailExist(request.body).then(resultFromController => {
+			response.send(resultFromController)
+		})
+});
+
 // User Registration - OK
 router.post("/register", (req, res) => {
 	userController.registerUser(req.body).then(resultFromController => res.send(resultFromController));
@@ -26,7 +32,7 @@ router.patch("/:userId/setAsAdmin", auth.verify, (req, res) => {
 });
 
 // Get all users' details (admin only) - OK
-router.get("/details", (req, res) => {
+router.get("/detailsAll", (req, res) => {
 	let user = auth.decode(req.headers.authorization);
 	if(user.isAdmin === false) {
 		res.send({message: "Failed to retrieve users' information, please seek admin assistance."});
@@ -35,10 +41,6 @@ router.get("/details", (req, res) => {
 	}
 });
 
-// Get a specific user's details - OK
-router.get("/:userId/details", (req, res) => {
-		userController.getUserProfile(req.params.userId).then(resultFromController => res.send(resultFromController));	
-});
 /*
 	// Add to cart products - under improvements
 
@@ -194,6 +196,18 @@ const validateOrder = async (reqBody, res) => {
 	};
 	return isValid;
 };
+
+// new for app.js capstone3
+router.get("/details", auth.verify, (req, res) => {
+	const userData = auth.decode(req.headers.authorization);
+	userController.getProfile(`${userData.id}`).then(resultFromController => res.send(resultFromController))
+});
+
+
+// Get a specific user's details - OK
+router.get("/details/:userId", (req, res) => {
+		userController.getUserProfile(req.params.userId).then(resultFromController => res.send(resultFromController));	
+});
 
 module.exports = router;
 
