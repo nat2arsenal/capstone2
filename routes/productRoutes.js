@@ -46,7 +46,8 @@ router.get("/:productId", (req, res) => {
 // Update a product's information (Admin Only) - OK
 router.patch("/:productId/info", auth.verify, (req, res) => {
 	if(auth.decode(req.headers.authorization).isAdmin === false) {
-		res.send({message: "Failed to update the product's information, please seek admin assistance."});
+		// res.send({message: "Failed to update the product's information, please seek admin assistance."});
+		res.send(false);
 	} else {
 		productController.updateProduct(req.params.productId, req.body).then(resultFromController => res.send(resultFromController))
 	}
@@ -61,13 +62,13 @@ router.patch("/:productId/info/stocks", auth.verify, (req, res) => {
 	}
 });
 
-// Subtracting stocks to a product's stocks (Admin Only) - OK
-router.patch("/:productId/info/stocks/subtract", auth.verify, (req, res) => {
-	if(auth.decode(req.headers.authorization).isAdmin === false) {
-		res.send({message: "Failed to update the product's information, please seek admin assistance."});
-	} else {
+// Subtracting stocks to a product's stocks - OK
+router.patch("/:productId/info/stocks/subtract",(req, res) => {
+	// if(auth.decode(req.headers.authorization).isAdmin === false) {
+	// 	res.send({message: "Failed to update the product's information, please seek admin assistance."});
+	// } else {
 		productController.subtractProductStocks(req.params.productId, req.body.stocks).then(resultFromController => res.send(resultFromController))
-	}
+	// }
 });
 
 // Archive a product (Admin Only)

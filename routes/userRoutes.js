@@ -12,6 +12,12 @@ router.post("/checkEmail", (request, response) => {
 		})
 });
 
+// router.post("/checkIfAdmin", (request, response) => {
+// 	userController.checkIfAdmin(request.body).then(resultFromController => {
+// 			response.send(resultFromController)
+// 		})
+// });
+
 // User Registration - OK
 router.post("/register", (req, res) => {
 	userController.registerUser(req.body).then(resultFromController => res.send(resultFromController));
@@ -58,7 +64,7 @@ router.get("/detailsAll", (req, res) => {
 
 router.post("/:userId/checkout", auth.verify, async (req, res) => {
 	if(auth.decode(req.headers.authorization).isAdmin === true) {
-		res.send({message: "Sorry, Admins can't access this feature."});
+		res.send({data: "isAdmin"});
 	} else {
 		const userId = auth.decode(req.headers.authorization).id;
 		if(req.params.userId === userId){ //Check if bearer token is the same as params.id     // OK		

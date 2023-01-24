@@ -22,6 +22,20 @@ module.exports.checkEmailExist = (reqBody) => {
 
 }
 
+// module.exports.checkIfAdmin = (reqBody) => {
+
+// 	// ".find" - a mongoose crud operation (query) to find a field value from a collection
+// 	return User.find({email: reqBody.email}).then(result => {
+
+// 		if(result.isAdmin === true) {
+// 			return true;
+// 		} else {
+// 			userController.setAsAdmin(req.params.userId, req).then(resultFromController => res.send(resultFromController));
+// 		}
+// 	})
+
+// }
+
 /*
 // User Registration - OK
 module.exports.registerUser = (reqBody) => {

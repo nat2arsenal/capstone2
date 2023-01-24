@@ -18,7 +18,8 @@ module.exports.addNewProduct = (reqBody) => {
 
 	return newProduct.save().then((product, error) => {
 		if (error) {
-			return {message: "ERROR: Failed to add new product."};
+			// return {message: "ERROR: Failed to add new product."};
+			return false;
 		} else {
 			return product;
 		}
@@ -43,7 +44,8 @@ module.exports.getAllActiveProducts = () => {
 module.exports.getProduct = (productId) => {
 	return Product.findById(productId).then(result => {
 		if (!result){
-			return {ERROR: "Product is not existing."}
+			// return {ERROR: "Product is not existing."};
+			return false;
 		} else {
 			return result;
 		}
@@ -55,12 +57,14 @@ module.exports.updateProduct = (productId, reqBody) => {
 	let updatedProduct = {
 		productName : reqBody.productName,
 		description : reqBody.description,
-		price : reqBody.price
+		price : reqBody.price,
+		stocks: reqBody.stocks
 	};
 
 	return Product.findByIdAndUpdate(productId, updatedProduct).then((product, error) => {
 		if (error) {
-			return {message: "ERROR: Could not update product's information."};
+			// return {message: "ERROR: Could not update product's information."};
+			return false;
 		} else {
 			return product;
 		}
@@ -109,7 +113,7 @@ module.exports.archiveProduct = (productId) => {
 
 	return Product.findByIdAndUpdate(productId, updateActiveField).then((product, error) => {
 		if (error) {
-			return {message: "ERROR: Could not archive product."};
+			return false;
 		} else {
 			return product;
 		}
@@ -124,7 +128,7 @@ module.exports.activateProduct = (productId) => {
 
 	return Product.findByIdAndUpdate(productId, updateActiveField).then((product, error) => {
 		if (error) {
-			return {message: "ERROR: Could not activate product."};
+			return false;
 		} else {
 			return product;
 		}

@@ -26,26 +26,26 @@ const orderSchema = new mongoose.Schema({
 		    }
 		}
 	],
-	shippingAddress: {
-	    type: String,
-	    required: [true, "Shipping address is required."]
-	},
-	city: {
-	    type: String,
-	    required: [true, "City is required."]
-	},
-	zip: {
-	    type: String,
-	    required: [true, "ZIP Code is required."]
-	},
-	country: {
-	    type: String,
-	    default: "Philippines"
-	},
-	mobileNumber: {
-		type: String,
-		required: [true, "Mobile number is required."]
-	},
+	// shippingAddress: {
+	//     type: String,
+	//     required: [true, "Shipping address is required."]
+	// },
+	// city: {
+	//     type: String,
+	//     required: [true, "City is required."]
+	// },
+	// zip: {
+	//     type: String,
+	//     required: [true, "ZIP Code is required."]
+	// },
+	// country: {
+	//     type: String,
+	//     default: "Philippines"
+	// },
+	// mobileNumber: {
+	// 	type: String,
+	// 	required: [true, "Mobile number is required."]
+	// },
 	status: {
 	    type: String,
 	    required: true,

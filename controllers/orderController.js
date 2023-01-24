@@ -54,18 +54,18 @@ module.exports.checkout = async(userId, reqBody) => {
 		userFirstName: user.firstName,
 		userLastName: user.lastName,
 		orderProducts : reqBody.orderProducts, 
-		shippingAddress: reqBody.shippingAddress,
-		city: reqBody.city,
-		zip: reqBody.zip,
-		country: reqBody.country,
-		mobileNumber: reqBody.mobileNumber,
+		// shippingAddress: reqBody.shippingAddress,
+		// city: reqBody.city,
+		// zip: reqBody.zip,
+		// country: reqBody.country,
+		// mobileNumber: reqBody.mobileNumber,
 		totalAmount: totalPrice
 	});
 	
 
 	return newOrder.save().then((order, error) => {
 		if (error) {
-			return {message: "ERROR: Failed to add new order."};
+			return false;
 		} else {
 			return order;
 		}

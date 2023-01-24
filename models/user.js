@@ -25,7 +25,23 @@ const userSchema = new mongoose.Schema({
 	mobileNumber: {
 		type: String,
 		required: [true, "Mobile number is required."]
-	}
+	},
+	// cart: [
+	// 	{
+	// 	    productId: {
+	// 	            type: String,
+	// 	            required: true
+	// 	    },
+	// 	    price: {
+	// 	    	type: Number,
+	// 	    	required: true
+	// 	    }, 
+	// 	    quantity: {
+	// 	        type: Number,
+	// 	        required: true
+	// 	    }
+	// 	}
+	// ]
 });
 
 module.exports = mongoose.model("User", userSchema);
