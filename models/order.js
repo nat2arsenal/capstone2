@@ -1,67 +1,65 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-
-	userId: {
-	    type: String,
-	    required: true
-	},
-	userFirstName: {
-		type: String,
-		required: true
-	},
-	userLastName: {
-		type: String,
-		required: true
-	},
-	orderProducts: [
-		{
-		    productId: {
-		            type: String,
-		            required: true
-		    },
-		    quantity: {
-		        type: Number,
-		        required: true
-		    }
-		}
-	],
-	// shippingAddress: {
-	//     type: String,
-	//     required: [true, "Shipping address is required."]
-	// },
-	// city: {
-	//     type: String,
-	//     required: [true, "City is required."]
-	// },
-	// zip: {
-	//     type: String,
-	//     required: [true, "ZIP Code is required."]
-	// },
-	// country: {
-	//     type: String,
-	//     default: "Philippines"
-	// },
-	// mobileNumber: {
-	// 	type: String,
-	// 	required: [true, "Mobile number is required."]
-	// },
-	status: {
-	    type: String,
-	    required: true,
-	    default: "Pending",
-	},
-	totalAmount: {
-	    type: Number,
-	},
-	transactionDate: {
-		type: Date,
-		default: new Date()
-	}
-
+  userId: {
+    type: String,
+    required: true,
+  },
+  userFirstName: {
+    type: String,
+    required: true,
+  },
+  userLastName: {
+    type: String,
+    required: true,
+  },
+  orderProducts: [
+    {
+      productId: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+  // shippingAddress: {
+  //     type: String,
+  //     required: [true, "Shipping address is required."]
+  // },
+  // city: {
+  //     type: String,
+  //     required: [true, "City is required."]
+  // },
+  // zip: {
+  //     type: String,
+  //     required: [true, "ZIP Code is required."]
+  // },
+  // country: {
+  //     type: String,
+  //     default: "Philippines"
+  // },
+  // mobileNumber: {
+  // 	type: String,
+  // 	required: [true, "Mobile number is required."]
+  // },
+  status: {
+    type: String,
+    required: true,
+    default: 'Pending',
+  },
+  totalAmount: {
+    type: Number,
+  },
+  transactionDate: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+module.exports = mongoose.model('Order', orderSchema);
 
 /**
 Order Example:
@@ -92,4 +90,3 @@ Order Example:
 }
 
  */
-

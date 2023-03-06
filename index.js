@@ -28,7 +28,8 @@ app.use("/users", userRoutes);
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
 
-app.listen(process.env.PORT || 5000, () => {console.log(`API is now online on port ${process.env.PORT || 5000}`)
+const port = process.env.PORT || 5000;
+app.listen(port, () => {console.log(`API is now online on port ${port}`)
 });
 
 /*
