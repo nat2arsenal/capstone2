@@ -18,8 +18,8 @@ module.exports.addNewProduct = (reqBody) => {
 
   return newProduct.save().then((product, error) => {
     if (error) {
-      // return {message: "ERROR: Failed to add new product."};
-      return false;
+      return {message: "ERROR: Failed to add new product."};
+      // return false;
     } else {
       return product;
     }
@@ -44,8 +44,8 @@ module.exports.getAllActiveProducts = () => {
 module.exports.getProduct = (productId) => {
   return Product.findById(productId).then((result) => {
     if (!result) {
-      // return {ERROR: "Product is not existing."};
-      return false;
+      return {message: "Product is not existing."};
+      // return false;
     } else {
       return result;
     }
@@ -64,8 +64,8 @@ module.exports.updateProduct = (productId, reqBody) => {
   return Product.findByIdAndUpdate(productId, updatedProduct).then(
     (product, error) => {
       if (error) {
-        // return {message: "ERROR: Could not update product's information."};
-        return false;
+        return {message: "ERROR: Could not update product's information."};
+        // return false;
       } else {
         return product;
       }

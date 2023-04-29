@@ -6,15 +6,15 @@ const orderController = require('../controllers/orderController.js');
 const productController = require('../controllers/productController.js');
 const Product = require('../models/product.js');
 
-router.post('/checkEmail', (request, response) => {
-  userController.checkEmailExist(request.body).then((resultFromController) => {
-    response.send(resultFromController);
+router.post('/checkEmail', (req, res) => {
+  userController.checkEmailExist(req.body).then((resultFromController) => {
+    res.send(resultFromController);
   });
 });
 
-// router.post("/checkIfAdmin", (request, response) => {
-// 	userController.checkIfAdmin(request.body).then(resultFromController => {
-// 			response.send(resultFromController)
+// router.post("/checkIfAdmin", (req, res) => {
+// 	userController.checkIfAdmin(req.body).then(resultFromController => {
+// 			res.send(resultFromController)
 // 		})
 // });
 

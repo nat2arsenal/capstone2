@@ -45,12 +45,13 @@ module.exports.checkout = async (userId, reqBody) => {
   const subtotals = await Promise.all(
     orderProductsIdsResolved.map(async (orderProductId) => {
       const orderProduct = await OrderProduct.findById(orderProductId);
-      const totalPrice = orderProduct.price * orderProduct.quantity;
-      return totalPrice;
+      const subtotal = orderProduct.price * orderProduct.quantity;
+      return subtotal;
     })
   );
 
-  const totalPrice = subtotals.reduce((a, b) => a + b, 0);
+  // console.log(subtotals);
+  const totalPrice = subtotals.reduce((a, c) => a + c, 0); //array.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
 
   const user = await User.findById(userId);
 

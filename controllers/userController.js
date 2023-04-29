@@ -33,15 +33,15 @@ module.exports.checkEmailExist = (reqBody) => {
 
 // }
 
-/*
+
 // User Registration - OK
 module.exports.registerUser = (reqBody) => {
 	return User.findOne({email : reqBody.email}).then(result => {
 
 		// Checking if the email is already registered
 		if (result !== null){ // Email already has a registered account
-			// return {ERROR: "There is already a registered account under the same email, kindly register again using another email. Thank you."}; 
-			return false;
+			return {message: "Email  is already registered to another account. Please register using a different email."}; 
+			// return false;
 		} else { // If email isn't registered, proceed with user registration
 			let newUser = new User({
 				firstName: reqBody.firstName,
@@ -53,52 +53,52 @@ module.exports.registerUser = (reqBody) => {
 		
 			return newUser.save().then((user, error) => {
 				if (error){
-					// return {ERROR: "User registration failed."}; 
-					return false;
+					return {message: "User registration failed."}; 
+					// return false;
 				} else {
-					// return {message: "Congratulations! You are now registered."}; 
-					return true;
+					return {message: "Congratulations! You are now registered."}; 
+					// return true;
 				}
 			})
 		}
 	});
 };
-*/
 
-module.exports.registerUser = (reqBody) => {
-  let newUser = new User({
-    firstName: reqBody.firstName,
-    lastName: reqBody.lastName,
-    email: reqBody.email,
-    /*
-			// bcrypt - package for password hashing
-			// hashSync - synchronously generates a hash (needs to finish before proceeding to next code)
-			// hash - asynchronously generates a hash
-		*/
-    password: bcrypt.hashSync(reqBody.password, 10),
-    /*
-			// 10 = salt rounds
-			// salt rounds is proportional to hashing rounds, the higher the salt rounds, the more hashing rounds and the longer it takes to generate an output
-			// hashing - converts a value to another value
-		*/
-    mobileNumber: reqBody.mobileNumber,
-  });
 
-  return newUser.save().then((user, error) => {
-    if (error) {
-      return false;
-    } else {
-      return true;
-    }
-  });
-};
+// module.exports.registerUser = (reqBody) => {
+//   let newUser = new User({
+//     firstName: reqBody.firstName,
+//     lastName: reqBody.lastName,
+//     email: reqBody.email,
+//     /*
+// 			// bcrypt - package for password hashing
+// 			// hashSync - synchronously generates a hash (needs to finish before proceeding to next code)
+// 			// hash - asynchronously generates a hash
+// 		*/
+//     password: bcrypt.hashSync(reqBody.password, 10),
+//     /*
+// 			// 10 = salt rounds
+// 			// salt rounds is proportional to hashing rounds, the higher the salt rounds, the more hashing rounds and the longer it takes to generate an output
+// 			// hashing - converts a value to another value
+// 		*/
+//     mobileNumber: reqBody.mobileNumber,
+//   });
+
+//   return newUser.save().then((user, error) => {
+//     if (error) {
+//       return false;
+//     } else {
+//       return true;
+//     }
+//   });
+// };
 
 // User Login - OK
 module.exports.loginUser = (reqBody) => {
   return User.findOne({ email: reqBody.email }).then((result) => {
     if (result == null) {
-      // return {ERROR: "Cannot login. Non-existent account."};
-      return false;
+      return {message: "Cannot login. Non-existent account."};
+      // return false;
     } else {
       // compareSynct is a bcrypt function that compares an unhashed password to a hashed password
       const isPasswordCorrect = bcrypt.compareSync(
@@ -110,8 +110,8 @@ module.exports.loginUser = (reqBody) => {
         return { access: auth.createAccessToken(result) };
       } else {
         //if passwords do not match
-        // return {ERROR: "Incorrect password."};
-        return false;
+        return {message: "Incorrect password."};
+        // return false;
       }
     }
   });
@@ -125,20 +125,20 @@ module.exports.setAsAdmin = (userId, req) => {
     if (user === null) {
       // Checking if user does not exist
 
-      return { ERROR: 'User does not exist.' };
+      return { message: 'User does not exist.' };
     } else if (loggedInUser.email === user.email) {
       // Checking if the user (with admin permissions) is setting himself as admin
 
-      return { ERROR: 'You are already an admin.' };
+      return { message: 'You are already an admin.' };
     } else if (user.isAdmin === true) {
       // Checking if the user (with admin permissions) is setting another user (who already has admin permissions) as an admin
 
-      return { ERROR: 'The account already has admin permissions.' };
+      return { message: 'The account already has admin permissions.' };
     } else {
       user.isAdmin = true;
       return user.save().then((updatedUser, error) => {
         if (error) {
-          return { ERROR: 'An unexpected error has occurred.' };
+          return { message: 'An unexpected error has occurred.' };
         } else {
           return { message: 'Congrats! You now have admin permissions.' };
         }
